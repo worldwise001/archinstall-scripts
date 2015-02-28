@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# update package manager files
+pacman -Syy
+
+# Setup automatic DHCP
+cd  /etc/systemd/network/
+touch prgmrDhcp.network
+echo "[Match]"  >> prgmrDhcp.network
+echo "Name=e*"  >> prgmrDhcp.network
+echo >> prgmrDhcp.network
+echo "[Network]"  >> prgmrDhcp.network
+echo "DHCP=v4"  >> prgmrDhcp.network
+systemctl enable systemd-networkd.service
+systemctl enable systemd-resolved
+
+# Disable ipv6 autoconfig
+touch /etc/sysctl.d/40-ipv6.conf
+echo "net.ipv6.conf.all.autoconf=0" >> /etc/sysctl.d/40-ipv6.conf
+echo "net.ipv6.conf.all.use_tempaddr=0" >> /etc/sysctl.d/40-ipv6.conf
+echo "net.ipv6.conf.eth0.accept_ra = 0" >> /etc/sysctl.d/40-ipv6.conf
+
+# set up swap file
+fallocate -l 512M /var/swap
+chmod 600 /var/swap
+mkswap /var/swap
+swapon /var/swap
+echo "/var/swap none swap defaults 0 0" >> /etc/fstab
+
+# ssh server install & configuration
+pacman -S --noconfirm openssh
+
+sed -i -e 's/#PermitRootLogin yes/PermitRootLogin without-password/g' \
+-e 's/PasswordAuthentication yes/PasswordAuthentication no/g' \
+/etc/ssh/sshd_config
+
+## ^ Consider also disabling insecure Protocol 1, as follows...
+#-e 's/^#Protocol 2/Protocol 2/g' \
+## source: http://www.nixtutor.com/linux/installing-and-configuring-an-ssh-server/
+
+# conform to prgmr kernal commands
+e2label /dev/xvda1 PRGMRDISK1
+sed -i 's/\/dev\/xvda1/LABEL=PRGMRDISK1/' /etc/fstab
+
+# install grub
+PATH=/usr/local/sbin:$PATH
+pacman -S --noconfirm grub
+grub-install --target=i386-pc --recheck --debug /dev/xvda
+
+# configure grub
+pacman -S --noconfirm python2
+cd /opt/install
+./grub-mkconfig -o /boot/grub/grub.cfg
+cat /boot/grub/grub.cfg | python2 prgmr-grub2-to-pv-grub-menu > /boot/grub/menu.lst
+sed -i 's/=UUID.\+/=LABEL=PRGMRDISK1 console=hvc0 ro rootflags=barrier=0/' /boot/grub/menu.lst
+
+# enable faster entropy gen
+pacman -S --noconfirm haveged
+
+# clear ssh & pacman keys
+rm /etc/ssh/ssh*key*
+rm -r /etc/pacman.d/gnupg
+
+# setup launch script / service
+
+prgmr-on-init-launch.s* /mnt/opt/install
+
+cp /opt/install/prgmr-on-init-launch.service /etc/systemd/system/prgmr-on-init-launch.service
+cp /opt/install/prgmr-on-init-launch.sh /usr/local/sbin/prgmr-on-init-launch.sh
+
+systemctl enable prgmr-on-init-launch
