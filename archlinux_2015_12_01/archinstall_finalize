@@ -48,8 +48,6 @@ pacman -S --noconfirm grub
 grub-install --target=i386-pc --recheck --debug /dev/xvda
 
 # configure grub
-pacman -S --noconfirm python2
-cd /opt/install
 grub-mkconfig -o /boot/grub/grub.cfg
 
 # enable faster entropy gen
