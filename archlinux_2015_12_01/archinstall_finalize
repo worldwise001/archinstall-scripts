@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # update package manager files
-pacman -Syy
+pacman -Syu
 
 # Setup automatic DHCP
 cd  /etc/systemd/network/
@@ -48,11 +48,7 @@ pacman -S --noconfirm grub
 grub-install --target=i386-pc --recheck --debug /dev/xvda
 
 # configure grub
-pacman -S --noconfirm python2
-cd /opt/install
-./grub-mkconfig -o /boot/grub/grub.cfg
-cat /boot/grub/grub.cfg | python2 prgmr-grub2-to-pv-grub-menu > /boot/grub/menu.lst
-sed -i 's/=UUID.\+/=LABEL=PRGMRDISK1 console=hvc0 ro rootflags=barrier=0/' /boot/grub/menu.lst
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # enable faster entropy gen
 pacman -S --noconfirm haveged
@@ -63,7 +59,8 @@ rm -r /etc/pacman.d/gnupg
 
 # setup launch script / service
 
-prgmr-on-init-launch.s* /mnt/opt/install
+# this command causes an error to be raised about the command not being found
+# prgmr-on-init-launch.s* /mnt/opt/install
 
 cp /opt/install/prgmr-on-init-launch.service /etc/systemd/system/prgmr-on-init-launch.service
 cp /opt/install/prgmr-on-init-launch.sh /usr/local/sbin/prgmr-on-init-launch.sh

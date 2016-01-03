@@ -17,16 +17,8 @@ cp prgmr-on-init-launch.s* /mnt/opt/install
 
 # Download and Extract tar
 cd /mnt/opt/install
-wget http://mirrors.kernel.org/archlinux/iso/2015.01.01/archlinux-bootstrap-2015.01.01-x86_64.tar.gz --output-document=arch-2015.01.01-64.tar.gz
-tar -zxvf arch-2015.01.01-64.tar.gz
-
-# pull Prgmr grub settings from old image
-mkdir /mnt/opt/install/tmp
-cd /mnt/opt/install/tmp
-tar -zxvf /distros/arch-2014.09-64.tar.gz
-mv grub-mkconfig /mnt/opt/install/
-mv prgmr-grub2-to-pv-grub-menu /mnt/opt/install/
-rm -r /mnt/opt/install/tmp
+wget https://mirrors.kernel.org/archlinux/iso/2015.12.01/archlinux-bootstrap-2015.12.01-x86_64.tar.gz --output-document=arch-2015.12.01-64.tar.gz
+tar -zxvf arch-2015.12.01-64.tar.gz
 
 # chroot into arch environment
 cp /etc/resolv.conf /mnt/opt/install/root.x86_64/etc
