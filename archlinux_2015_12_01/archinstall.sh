@@ -35,6 +35,8 @@ mount --rbind /run /mnt/run
 
 chroot /mnt/ /opt/install/archinstall_finalize
 
+echo "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~"
 echo "finished"
+echo "********"
 
 #rm -r /mnt/opt/install
