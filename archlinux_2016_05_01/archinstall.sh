@@ -17,8 +17,8 @@ cp prgmr-on-init-launch.s* /mnt/opt/install
 
 # Download and Extract tar
 cd /mnt/opt/install
-wget https://mirrors.kernel.org/archlinux/iso/2015.12.01/archlinux-bootstrap-2015.12.01-x86_64.tar.gz --output-document=arch-2015.12.01-64.tar.gz
-tar -zxvf arch-2015.12.01-64.tar.gz
+wget https://mirrors.kernel.org/archlinux/iso/2016.05.01/archlinux-bootstrap-2016.05.01-x86_64.tar.gz --output-document=arch-2016.05.01-64.tar.gz
+tar -zxvf arch-2016.05.01-64.tar.gz
 
 # chroot into arch environment
 cp /etc/resolv.conf /mnt/opt/install/root.x86_64/etc
