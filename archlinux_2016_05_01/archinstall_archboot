@@ -1,8 +1,7 @@
 #!/bin/bash
 # Select the mirrors
 
-echo "Server = http://mirrors.kernel.org/archlinux/\$repo/os/\$arch" >> /etc/pacman.d/mirrorlist
-echo "Server = http://mirrors.xmission.com/archlinux/$repo/os/$arch" >> /etc/pacman.d/mirrorlist
+echo "Server = http://mirrors.kernel.org/archlinux/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist
 
 # Get the security keys sorted out
 # Produce 'entropy' for key gen, these keys are deleted after install
@@ -14,9 +13,16 @@ kill -- -${ENTROPY_GEN}
 pacman-key --populate archlinux
 
 # install the system and change into new root
+e2label /dev/xvda1 PRGMRDISK1
+e2label /dev/xvda3 PRGMRDISK3
+
 mount /dev/xvda1 /mnt
-pacstrap /mnt base
+mkdir /mnt/var
+mount /dev/xvda3 /mnt/var
+swapon /dev/xvda2
+
+pacstrap /mnt base base-devel vim net-tools screen linux-lts grub haveged openssh cronie syslog-ng ntp exim letsencrypt openvpn
 genfstab -p /mnt >> /mnt/etc/fstab
 cp /etc/resolv.conf /mnt/etc
-umount /mnt
+umount -R /mnt
 exit

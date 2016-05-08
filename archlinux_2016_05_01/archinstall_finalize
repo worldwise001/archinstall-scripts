@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# update package manager files
-pacman -Syu
-
 # Setup automatic DHCP
 cd  /etc/systemd/network/
 touch prgmrDhcp.network
@@ -20,16 +17,7 @@ echo "net.ipv6.conf.all.autoconf=0" >> /etc/sysctl.d/40-ipv6.conf
 echo "net.ipv6.conf.all.use_tempaddr=0" >> /etc/sysctl.d/40-ipv6.conf
 echo "net.ipv6.conf.eth0.accept_ra = 0" >> /etc/sysctl.d/40-ipv6.conf
 
-# set up swap file
-fallocate -l 512M /var/swap
-chmod 600 /var/swap
-mkswap /var/swap
-swapon /var/swap
-echo "/var/swap none swap defaults 0 0" >> /etc/fstab
-
-# ssh server install & configuration
-pacman -S --noconfirm openssh
-
+# ssh configuration
 sed -i -e 's/#PermitRootLogin yes/PermitRootLogin without-password/g' \
 -e 's/PasswordAuthentication yes/PasswordAuthentication no/g' \
 /etc/ssh/sshd_config
@@ -38,26 +26,26 @@ sed -i -e 's/#PermitRootLogin yes/PermitRootLogin without-password/g' \
 #-e 's/^#Protocol 2/Protocol 2/g' \
 ## source: http://www.nixtutor.com/linux/installing-and-configuring-an-ssh-server/
 
-# conform to prgmr kernal commands
-e2label /dev/xvda1 PRGMRDISK1
-sed -i 's/\/dev\/xvda1/LABEL=PRGMRDISK1/' /etc/fstab
-
 # install grub
 PATH=/usr/local/sbin:$PATH
-pacman -S --noconfirm grub
-grub-install --target=i386-pc --recheck --debug /dev/xvda
+grub-install --target=i386-pc --recheck /dev/xvda
 
 # configure grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# enable faster entropy gen
-pacman -S --noconfirm haveged
-
 # clear ssh & pacman keys
-rm /etc/ssh/ssh*key*
-rm -r /etc/pacman.d/gnupg
+rm /etc/ssh/ssh*key* 2>/dev/null
+rm -r /etc/pacman.d/gnupg 2>/dev/null
 
-# setup launch script / service
+# Some misc package configs
+pacman -R logrotate
+systemctl enable ntpd
+
+# Default locale and things
+sed -i -e 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+locale-gen
+echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+echo 'KEYMAP=us' > /etc/vconsole.conf
 
 # this command causes an error to be raised about the command not being found
 # prgmr-on-init-launch.s* /mnt/opt/install
