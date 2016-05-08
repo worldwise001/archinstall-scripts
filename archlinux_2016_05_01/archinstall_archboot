@@ -15,7 +15,7 @@ pacman-key --populate archlinux
 
 # install the system and change into new root
 mount /dev/xvda1 /mnt
-pacstrap /mnt base
+pacstrap /mnt base base-devel vim net-tools screen linux-lts grub haveged openssh cronie syslog-ng ntpd
 genfstab -p /mnt >> /mnt/etc/fstab
 cp /etc/resolv.conf /mnt/etc
 umount /mnt

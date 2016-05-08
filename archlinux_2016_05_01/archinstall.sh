@@ -6,19 +6,17 @@ echo -e 'o\nn\np\n1\n\n\nw' | fdisk -u /dev/xvda
 mkfs.ext4 /dev/xvda1
 mount /dev/xvda1 /mnt
 
+# Download and Extract tar
+mkdir -p /mnt/opt/install
+pushd /mnt/opt/install
+wget https://mirrors.kernel.org/archlinux/iso/2016.05.01/archlinux-bootstrap-2016.05.01-x86_64.tar.gz --output-document=arch-2016.05.01-64.tar.gz
+tar -zxf arch-2016.05.01-64.tar.gz
+
 # Copy scripts into place
-mkdir /mnt/opt/
-mkdir /mnt/opt/install
-mkdir  /mnt/opt/install/root.x86_64
-mkdir  /mnt/opt/install/root.x86_64/opt/
+popd
 cp archinstall_archboot /mnt/opt/install/root.x86_64/opt/
 cp archinstall_finalize /mnt/opt/install
 cp prgmr-on-init-launch.s* /mnt/opt/install
-
-# Download and Extract tar
-cd /mnt/opt/install
-wget https://mirrors.kernel.org/archlinux/iso/2016.05.01/archlinux-bootstrap-2016.05.01-x86_64.tar.gz --output-document=arch-2016.05.01-64.tar.gz
-tar -zxvf arch-2016.05.01-64.tar.gz
 
 # chroot into arch environment
 cp /etc/resolv.conf /mnt/opt/install/root.x86_64/etc
