@@ -66,3 +66,11 @@ cp /opt/install/prgmr-on-init-launch.service /etc/systemd/system/prgmr-on-init-l
 cp /opt/install/prgmr-on-init-launch.sh /usr/local/sbin/prgmr-on-init-launch.sh
 
 systemctl enable prgmr-on-init-launch
+
+
+# Fix GRUB
+cd /boot
+ln -s vmlinuz-linux vmlinuz26
+ln -s initramfs-linux.img kernel26.img
+ln -s initramfs-linux-fallback.img kernel26-fallback.img
+
