@@ -10,7 +10,7 @@ NOTE: This will erase the instance disk and install ONLY Archlinux
 cd /tmp
 wget https://github.com/prgmrcom/archinstall-scripts/archive/master.zip
 unzip master.zip
-cd archinstall-scripts-master/archlinux_2016_05_09
+cd archinstall-scripts-master/
 ./archinstall.sh
 
 7) You should see a 'Finished' message
