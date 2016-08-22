@@ -42,7 +42,7 @@ sed -i 's/\/dev\/xvda4/LABEL=HOME/' /etc/fstab
 
 # install grub
 PATH=/usr/local/sbin:$PATH
-grub-install --target=i386-pc --recheck --debug /dev/xvda
+grub-install --target=i386-pc --recheck /dev/xvda
 
 # configure grub
 grub-mkconfig -o /boot/grub/grub.cfg
@@ -50,9 +50,15 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # clear ssh & pacman keys
 rm /etc/ssh/ssh*key*
 rm -r /etc/pacman.d/gnupg
-pacman -R logrotate --noconfirm
+pacman -R logrotate
 systemctl enable ntpd
 systemctl enable cronie
+
+# Default locale and things
+sed -i -e 's/#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/g' /etc/locale.gen
+locale-gen
+echo 'LANG=en_US.UTF-8' > /etc/locale.conf
+echo 'KEYMAP=us' > /etc/vconsole.conf
 
 # setup launch script / service
 

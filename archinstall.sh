@@ -56,17 +56,14 @@ tar -zxf archlinux-bootstrap-*-x86_64.tar.gz
 
 # chroot into arch environment
 cp /etc/resolv.conf /mnt/opt/install/root.x86_64/etc
-mount --rbind /proc /mnt/opt/install/root.x86_64/proc
-mount --rbind /sys /mnt/opt/install/root.x86_64/sys
-mount --rbind /dev /mnt/opt/install/root.x86_64/dev
-mount --rbind /run /mnt/opt/install/root.x86_64/run
+for i in {proc,sys,dev,run}; do
+  mount --rbind /$i /mnt/opt/install/root.x86_64/$i
+done
 chroot /mnt/opt/install/root.x86_64/ /opt/archinstall_archboot
 
-mount --rbind /proc /mnt/proc
-mount --rbind /sys /mnt/sys
-mount --rbind /dev /mnt/dev
-mount --rbind /run /mnt/run
-
+for i in {proc,sys,dev,run}; do
+  mount --rbind /$i /mnt/$i
+done
 chroot /mnt/ /opt/install/archinstall_finalize
 
 echo "~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~"
