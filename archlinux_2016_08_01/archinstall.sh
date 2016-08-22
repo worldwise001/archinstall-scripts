@@ -11,9 +11,9 @@ mount /dev/xvda1 /mnt
 # Download and Extract tar
 mkdir -p /mnt/opt/install
 pushd /mnt/opt/install
-wget https://mirrors.kernel.org/archlinux/iso/2016.05.01/archlinux-bootstrap-2016.05.01-x86_64.tar.gz --output-document=arch-2016.05.01-64.tar.gz
+wget https://mirrors.kernel.org/archlinux/iso/2016.08.01/archlinux-bootstrap-2016.08.01-x86_64.tar.gz --output-document=arch-2016.08.01-64.tar.gz
 echo "Extracting bootstrap"
-tar -zxf arch-2016.05.01-64.tar.gz
+tar -zxf arch-2016.08.01-64.tar.gz
 
 # Copy scripts into place
 popd
