@@ -15,8 +15,11 @@ fi
 
 
 # Partition the disk
-echo -e 'o\nn\np\n1\n\n\nw' | fdisk -u /dev/xvda
-mkfs.ext4 /dev/xvda1
+echo -e 'o\nn\np\n1\n\n+10G\nn\np\n2\n\n+512M\nt\n2\n82\nn\np\n3\n\n+10G\nn\np\n4\n\n\nw' | fdisk -u /dev/xvda
+yes | mkfs.ext4 /dev/xvda1
+mkswap /dev/xvda2
+yes | mkfs.ext4 /dev/xvda3
+yes | mkfs.ext4 /dev/xvda4
 mount /dev/xvda1 /mnt
 
 # Copy scripts into place

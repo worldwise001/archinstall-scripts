@@ -21,14 +21,8 @@ echo "net.ipv6.conf.all.use_tempaddr=0" >> /etc/sysctl.d/40-ipv6.conf
 echo "net.ipv6.conf.eth0.accept_ra = 0" >> /etc/sysctl.d/40-ipv6.conf
 
 # set up swap file
-fallocate -l 512M /var/swap
-chmod 600 /var/swap
-mkswap /var/swap
-swapon /var/swap
-echo "/var/swap none swap defaults 0 0" >> /etc/fstab
-
-# ssh server install & configuration
-pacman -S --noconfirm openssh
+swapon /dev/xvda2
+echo "/dev/xvda2 none swap defaults 0 0" >> /etc/fstab
 
 sed -i -e 's/#PermitRootLogin yes/PermitRootLogin without-password/g' \
 -e 's/PasswordAuthentication yes/PasswordAuthentication no/g' \
@@ -39,23 +33,26 @@ sed -i -e 's/#PermitRootLogin yes/PermitRootLogin without-password/g' \
 ## source: http://www.nixtutor.com/linux/installing-and-configuring-an-ssh-server/
 
 # conform to prgmr kernal commands
-e2label /dev/xvda1 PRGMRDISK1
-sed -i 's/\/dev\/xvda1/LABEL=PRGMRDISK1/' /etc/fstab
+e2label /dev/xvda1 ROOT
+sed -i 's/\/dev\/xvda1/LABEL=ROOT/' /etc/fstab
+e2label /dev/xvda3 VAR
+sed -i 's/\/dev\/xvda3/LABEL=VAR/' /etc/fstab
+e2label /dev/xvda4 HOME
+sed -i 's/\/dev\/xvda4/LABEL=HOME/' /etc/fstab
 
 # install grub
 PATH=/usr/local/sbin:$PATH
-pacman -S --noconfirm grub
 grub-install --target=i386-pc --recheck --debug /dev/xvda
 
 # configure grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
-# enable faster entropy gen
-pacman -S --noconfirm haveged
-
 # clear ssh & pacman keys
 rm /etc/ssh/ssh*key*
 rm -r /etc/pacman.d/gnupg
+pacman -R logrotate --noconfirm
+systemctl enable ntpd
+systemctl enable cronie
 
 # setup launch script / service
 
@@ -66,7 +63,6 @@ cp /opt/install/prgmr-on-init-launch.service /etc/systemd/system/prgmr-on-init-l
 cp /opt/install/prgmr-on-init-launch.sh /usr/local/sbin/prgmr-on-init-launch.sh
 
 systemctl enable prgmr-on-init-launch
-
 
 # Fix GRUB
 cd /boot
