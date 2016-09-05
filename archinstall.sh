@@ -15,7 +15,7 @@ fi
 
 
 # Partition the disk
-echo -e 'o\nn\np\n1\n\n+10G\nn\np\n2\n\n+512M\nt\n2\n82\nn\np\n3\n\n+10G\nn\np\n\n\nw' | fdisk -u /dev/xvda
+echo -e 'o\nn\np\n1\n\n+5G\nn\np\n2\n\n+512M\nt\n2\n82\nn\np\n3\n\n+5G\nn\np\n\n\nw' | fdisk -u /dev/xvda
 yes | mkfs.ext4 /dev/xvda1
 mkswap /dev/xvda2
 yes | mkfs.ext4 /dev/xvda3

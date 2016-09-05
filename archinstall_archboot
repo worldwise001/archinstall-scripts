@@ -15,9 +15,9 @@ pacman-key --populate archlinux
 
 # install the system and change into new root
 mount /dev/xvda1 /mnt
-mkdir /mnt/var /mnt/users
+mkdir /mnt/var /mnt/srv
 mount /dev/xvda3 /mnt/var
-mount /dev/xvda4 /mnt/users
+mount /dev/xvda4 /mnt/srv
 pacstrap /mnt base base-devel vim net-tools screen linux-lts grub haveged openssh cronie syslog-ng ntp exim certbot openvpn
 
 genfstab -p /mnt >> /mnt/etc/fstab

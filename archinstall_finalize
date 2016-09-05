@@ -37,8 +37,8 @@ e2label /dev/xvda1 ROOT
 sed -i 's/\/dev\/xvda1/LABEL=ROOT/' /etc/fstab
 e2label /dev/xvda3 VAR
 sed -i 's/\/dev\/xvda3/LABEL=VAR/' /etc/fstab
-e2label /dev/xvda4 HOME
-sed -i 's/\/dev\/xvda4/LABEL=HOME/' /etc/fstab
+e2label /dev/xvda4 SRV
+sed -i 's/\/dev\/xvda4/LABEL=SRV/' /etc/fstab
 
 # install grub
 PATH=/usr/local/sbin:$PATH
@@ -50,7 +50,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # clear ssh & pacman keys
 rm /etc/ssh/ssh*key*
 rm -r /etc/pacman.d/gnupg
-pacman -R logrotate
+pacman -R logrotate --confirm
 systemctl enable ntpd
 systemctl enable cronie
 
